@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome ---->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+        integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Twitter Blockquotes</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="inner">
+            <div class="box">
+                <p class="number">
+                    <img src="./logo.png" alt="tweetme" title="Tweet Me" height="40" onclick="TweetMe()">
+                </p>
+                <div class="text">
+                    <i class="start-quote fas fa-quote-left"></i>
+                    <p id="text" class="textpara"></p>
+                    <p id="author" class="author"></p>
+                </div>
+                <label class="button">
+                    <p onclick="getNewQuotes()">new Quote</p>
+                </label>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const text = document.getElementById("text");
+        const author = document.getElementById("author");
+        let realData = "";  // Json Object Data
+        let quotesData = "";  // Random data of Quotes
+
+        // For New Quotes to display in text id and author id
+        function getNewQuotes() {
+            let RandomQuote = Math.floor(Math.random() * 20);
+            quotesData = realData[RandomQuote];
+            // to put text of quote in text id div
+            text.innerText = `${quotesData.text}`;
+            // check if autor is null put unkwon otherwise add its author name in author id div
+            if (quotesData.author == null) {
+                author.innerText = "Unknown";
+            }
+            else {
+                author.innerText = `${quotesData.author}`;
+            }
+        }
+        // Tweet Me Function
+        function TweetMe() {
+            window.open(`http://twitter.com/intent/tweet?text=${quotesData.text}${quotesData.author}`);
+        }
+
+
+        // fetch api fata to store in real data varibale as an object
+        async function GetQuotes() {
+            const api = "https://type.fit/api/quotes";
+            try {
+                let data = await fetch(api);
+                realData = await data.json();
+                // Call Another function which give new Quotes
+                getNewQuotes();
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        GetQuotes();
+    </script>
+</body>
+
+</html>
